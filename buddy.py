@@ -38,6 +38,7 @@ def get_directions():
     except:
         print('there are no alternate routes')
 
+    print(resp)
     return render_template('directions.html', result = resp)
 
 @app.route('/')
