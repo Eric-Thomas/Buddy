@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html class="text-dark" style="background-image: url(&quot;assets/img/cxv7qut4pj221.jpg&quot;);">
+<html class="text-dark" style="background-image: url(&quot;static/assets/img/cxv7qut4pj221.jpg&quot;);">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Home - Buddy</title>
     <meta name="description" content="Let's get you there safely">
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/bootstrap/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
-    <link rel="stylesheet" href="assets/css/Footer-Dark.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/Footer-Dark.css') }}">
+    
 </head>
 
 <body class="text-dark" style="background-color: rgba(255,255,255,0);">
@@ -29,13 +30,14 @@
                         <div class="form-row" style="padding-bottom: 10px;">
                             <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control d-xl-flex align-items-xl-start overlay" type="text" id="starting-point" placeholder="Enter your starting location..." style="opacity: 0.75;height: 48px;color: rgb(255,255,255);padding-bottom: 6px;"></div>
                             <div
-                                class="col-12 col-md-3"><button class="btn btn-dark btn-block btn-lg" type="button" style="font-size: 16px;background-color: rgba(52,58,64,0.49);">Get Location</button></div>
+                                class="col-12 col-md-3"><button id="get-location-button" onclick="getLocation()" class="btn btn-dark btn-block btn-lg" type="button" style="font-size: 16px;background-color: rgba(52,58,64,0.49);">Get Location</button></div>
                 </div>
                 <div class="form-row">
                     <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control d-xl-flex align-items-xl-start overlay" type="text" id="destination" placeholder="Enter your destination..." style="opacity: 0.75;color: rgb(255,255,255);"></div>
                     <div class="col-12 col-md-3"><button class="btn btn-success btn-block btn-lg" type="submit" style="background-color: rgba(40,167,69,0.45);">Start</button></div>
                 </div>
                 </form>
+                <p id="get-location-error"></p>
             </div>
         </div>
         </div>
@@ -61,6 +63,39 @@
             </div>
         </footer>
     </div>
+    <script>
+        var x = document.getElementById("get-location-error");
+        
+        function getLocation() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(fillCurrentPosition, showError);
+          } else { 
+            x.innerHTML = "Sorry :( Geolocation is not supported by this browser.";
+          }
+        }
+
+        function fillCurrentPosition(position){
+            document.getElementById("starting-point").value = position.coords.latitude + ", " + 
+                position.coords.longitude;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                x.innerHTML = "User denied the request for Geolocation."
+                break;
+                case error.POSITION_UNAVAILABLE:
+                x.innerHTML = "Location information is unavailable."
+                break;
+                case error.TIMEOUT:
+                x.innerHTML = "The request to get user location timed out."
+                break;
+                case error.UNKNOWN_ERROR:
+                x.innerHTML = "Sorry! :( An unknown error occurred."
+                break;
+            }
+        }
+    </script>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
