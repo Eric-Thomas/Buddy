@@ -6,12 +6,10 @@ import pprint
 key = 'D2ZCny0cmDMUDUbsavWda8qvTD9K3iRV'
 app = Flask(__name__)
 
-@app.route('/directions', methods=['GET'])
+@app.route('/directions', methods=['POST'])
 def get_directions():
-    # start = request.args.get('from')
-    # end = request.args.get('to')
-    start = '1900 Summit Street Columbus Ohio'
-    end = '1494 North High Street Columbus Ohio'
+    start = request.form['start']
+    end = request.form['end']
     params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'narrativeType': 'html'}
     content = requests.get('http://www.mapquestapi.com/directions/v2/route', params=params).content
     parsed_json = json.loads(content)
@@ -24,8 +22,6 @@ def get_directions():
             data['distance'] = maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             resp['directions'].append(data)
-
-    print(requests.get('https://spotcrime.com/#1900%20Summit%20Street%20Columbus%20Ohio').content)
 
     return json.dumps(resp)
 
