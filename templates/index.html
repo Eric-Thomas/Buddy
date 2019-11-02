@@ -26,14 +26,14 @@
                     <h1 class="mb-5">Buddy will get you there safely</h1>
                 </div>
                 <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-                    <form style="padding-top: 20px;">
+                    <form style="padding-top: 20px;" action="/directions" method="POST">
                         <div class="form-row" style="padding-bottom: 10px;">
-                            <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control d-xl-flex align-items-xl-start overlay" type="text" id="starting-point" placeholder="Enter your starting location..." style="opacity: 0.75;height: 48px;color: rgb(255,255,255);padding-bottom: 6px;"></div>
+                            <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control d-xl-flex align-items-xl-start overlay" type="text" id="starting-point" name="start" placeholder="Enter your starting location..." style="opacity: 0.75;height: 48px;color: rgb(255,255,255);padding-bottom: 6px;"></div>
                             <div
                                 class="col-12 col-md-3"><button class="btn btn-dark btn-block btn-lg" type="button" style="font-size: 16px;background-color: rgba(52,58,64,0.49);">Get Location</button></div>
                 </div>
                 <div class="form-row">
-                    <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control d-xl-flex align-items-xl-start overlay" type="text" id="destination" placeholder="Enter your destination..." style="opacity: 0.75;color: rgb(255,255,255);"></div>
+                    <div class="col-12 col-md-9 mb-2 mb-md-0"><input class="form-control d-xl-flex align-items-xl-start overlay" type="text" id="destination" name="end" placeholder="Enter your destination..." style="opacity: 0.75;color: rgb(255,255,255);"></div>
                     <div class="col-12 col-md-3"><button class="btn btn-success btn-block btn-lg" type="submit" style="background-color: rgba(40,167,69,0.45);">Start</button></div>
                 </div>
                 </form>
