@@ -16,7 +16,6 @@ def get_directions():
     content = requests.get('http://www.mapquestapi.com/directions/v2/route', params=params).content
     parsed_json = json.loads(content)
     pp = pprint.PrettyPrinter()
-    pp.pprint(parsed_json)
     resp = {'directions': [],}
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
@@ -25,6 +24,8 @@ def get_directions():
             data['distance'] = maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             resp['directions'].append(data)
+
+    print(requests.get('https://spotcrime.com/#1900%20Summit%20Street%20Columbus%20Ohio').content)
 
     return json.dumps(resp)
 
