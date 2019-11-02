@@ -10,7 +10,7 @@ app = Flask(__name__)
 def get_directions():
     start = request.form['start']
     end = request.form['end']
-    params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'narrativeType': 'html'}
+    params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian'}
     content = requests.get('http://www.mapquestapi.com/directions/v2/route', params=params).content
     parsed_json = json.loads(content)
     pp = pprint.PrettyPrinter()
@@ -23,7 +23,8 @@ def get_directions():
             data['startPoint'] = maneuver['startPoint']
             resp['directions'].append(data)
 
-    return json.dumps(resp)
+    return render_template('directions.html', result = resp)
+
 
 @app.route('/')
 def index():

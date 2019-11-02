@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+   <body>
+      <table border = 1>
+        {% for key, value in result.items() %}
+            {% for v in value  %}
+                <tr>
+                <th>Step {{ loop.index }} </th>
+                <td> {{ v.narrative }} </td>
+                </tr>
+            {% endfor %}
+        {% endfor %}
+      </table>
+   </body>
+</html>
