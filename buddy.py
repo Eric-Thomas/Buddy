@@ -10,11 +10,11 @@ app = Flask(__name__)
 def get_directions():
     start = request.form['start']
     end = request.form['end']
-    params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian'}
-    content = requests.get('http://www.mapquestapi.com/directions/v2/route', params=params).content
+    params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'maxRoutes': 5, 'timeOverage': 200}
+    content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
     pp = pprint.PrettyPrinter()
-    resp = {'directions': [],}
+    resp = {'directions': [], 'alternateRoutes': []}
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
@@ -23,8 +23,25 @@ def get_directions():
             data['startPoint'] = maneuver['startPoint']
             resp['directions'].append(data)
 
-    return render_template('directions.html', result = resp)
 
+    try:
+        for alt_route in parsed_json['route']['alternateRoutes']:
+                for leg in alt_route['route']['legs']:
+                    for maneuver in leg['maneuvers']:
+                        data = {'narrative': '', 'distance': '', 'startPoint': ''}
+                        data['narrative'] = maneuver['narrative']
+                        data['distance'] = maneuver['distance']
+                        data['startPoint'] = maneuver['startPoint']
+                        resp['alternateRoutes'].append(data)
+    except:
+        print('there are no alternate routes')
+
+    
+    print(resp['alternateRoutes'])
+
+    return resp
+
+    return render_template('directions.html', result = resp)
 
 @app.route('/')
 def index():
