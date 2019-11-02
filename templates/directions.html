@@ -24,7 +24,7 @@
         <div class="container">
             <div class="row" style="background-color: rgba(118,118,118,0.06);padding-bottom: 80px;">
                 <div class="col-xl-9 mx-auto">
-                    <h1 class="mb-5" style="font-size: 30px;">Directions from ___ to ___</h1>
+                    <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
                     <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.&nbsp;</p>
                 </div>
                     <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
@@ -32,10 +32,8 @@
                         <div class="card" style="background-color: rgba(255,255,255,0.38);">
                             {% for key, value in result.items() %}
                                 {% for v in value  %}
-                                    <tr>
-                                    <th>Step {{ loop.index }} </th>
-                                    <td> {{ v.narrative }}Walk for {{ v.distance }} miles</td>
-                                    </tr>
+                                    <h3>Step {{ loop.index }} </h3>
+                                    <h4> {{ v.narrative }}Walk for {{ v.distance }} miles</h4>
                                 {% endfor %}
                             {% endfor %}
                             <div class="card-header d-flex justify-content-between" role="tab">

@@ -14,7 +14,7 @@ def get_directions():
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
     pp = pprint.PrettyPrinter()
-    resp = {'directions': [], 'alternateRoutes': []}
+    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end}
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
@@ -26,20 +26,17 @@ def get_directions():
 
     try:
         for alt_route in parsed_json['route']['alternateRoutes']:
-                for leg in alt_route['route']['legs']:
-                    for maneuver in leg['maneuvers']:
-                        data = {'narrative': '', 'distance': '', 'startPoint': ''}
-                        data['narrative'] = maneuver['narrative']
-                        data['distance'] = maneuver['distance']
-                        data['startPoint'] = maneuver['startPoint']
-                        resp['alternateRoutes'].append(data)
+            route = []
+            for leg in alt_route['route']['legs']:
+                for maneuver in leg['maneuvers']:
+                    data = {'narrative': '', 'distance': '', 'startPoint': ''}
+                    data['narrative'] = maneuver['narrative']
+                    data['distance'] = maneuver['distance']
+                    data['startPoint'] = maneuver['startPoint']
+                    route.append(data)
+            resp['alternateRoutes'].append(route)
     except:
         print('there are no alternate routes')
-
-    
-    print(resp['alternateRoutes'])
-
-    return resp
 
     return render_template('directions.html', result = resp)
 
