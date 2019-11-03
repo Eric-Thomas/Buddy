@@ -111,10 +111,11 @@
                 index = 1;
                 tempSteps = "";
                 tempCrimeRating = ""
-                //console.log(route)
                 for (direction of route.directions ){
-                    tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
+                  for (step of direction){
+                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "\n";
                     index++;
+                  }
                 }
                 tempCrimeRating = route.crimeRating;
                 directionsArray.push({
@@ -122,7 +123,7 @@
                     crimeRating: tempCrimeRating
                 });
             }
-            //console.log(directionsArray);
+            console.log(directionsArray);
         }
         function toggleAccordion() {
         //   var card = document.getElementById(cardId);
