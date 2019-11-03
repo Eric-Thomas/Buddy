@@ -1,7 +1,5 @@
 <!DOCTYPE html>
 <html class="text-dark" style="background-image: url(static/img/cxv7qut4pj221.jpg); background-repeat: no-repeat; background-color: rgb(40,45,50);">
-
-
 <head >
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
@@ -10,9 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Footer-Dark.css') }}">
-
 </head>
-
 <body onload="parseResults()" class="text-dark" style="background-color: rgba(255,255,255,0);">
     <nav class="navbar navbar-light navbar-expand bg-dark navigation-clean" style="opacity: 1;filter: brightness(100%);">
         <div class="container"><a class="navbar-brand" href="/" style="background-color: rgba(255,255,255,0);color: rgba(255,255,255,0.9);">Buddy</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
@@ -22,11 +18,10 @@
     </nav>
     <header class="d-xl-flex flex-grow-1 flex-fill align-items-xl-end masthead text-white text-center" style="background: url('bg-masthead.jpg')no-repeat center center;padding-top: 100px;padding-bottom: 400px;background-image: url(&quot;none&quot;);">
         <div class="container flex-grow-1" style="background-color: rgba(111,111,111,0.15);">
-                <div class="row">
-                    <div class="col-xl-9 mx-auto">
-                            <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
-                            <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.</p>
-                    </div>
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
+                    <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.</p>
                 </div>
                 <div class="row">
                         <div class="col d-md-flex align-items-md-center" style="width: 600px;max-width: 100%;padding-left: 0px;"><img width="600px" height="400px" src="../static/img/map.jpg"></div>
@@ -41,8 +36,13 @@
                         <p id="route-time-and-distance" style="font-size: 18px;margin-bottom: 0px;"></p>
                         <h4 id="route-paragraph"style="font-size: 14px;"></h4>
                     </div>
+                    <p id="route-number"style="font-size: 18px;margin-bottom: 0px;"></p>
+                    <p id="route-crime-rating"style="font-size: 18px;margin-bottom: 0px;"></p>
+                    <p id="route-real-time" style="font-size: 18px;margin-bottom: 0px;"></p>
+                    <h4 id="route-paragraph"style="font-size: 14px;"></h4>
                 </div>
             </div>
+        </div>
     </header>
 
     <div class="footer-dark" style="padding-top: 20px;padding-bottom: 1px;">
