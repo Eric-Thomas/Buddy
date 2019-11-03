@@ -65,8 +65,8 @@
             var index = 1;
             var tempSteps = ""
             var tempCrimeRating = ""
-            for (direction of result.directions ){
-                tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "<br>";
+            for (direction of result.directions){
+                tempSteps += "Step " + index + " " + direction.narrative + " (" + direction.distance + ")<br>";
                 index++;
             }
             tempCrimeRating = result.crimeRating;
@@ -83,7 +83,7 @@
                 tempCrimeRating = ""
                 for (direction of route.directions ){
                   for (step of direction){
-                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "<br>";
+                    tempSteps += "Step " + index + " " + step.narrative + " (" + step.distance + ")<br>";
                     index++;
                   }
                 }
