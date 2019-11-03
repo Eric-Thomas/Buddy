@@ -30,11 +30,10 @@
                     <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
                     <div class="text-light" role="tablist" id="accordion-1">
                         <div class="card" style="background-color: rgba(255,255,255,0.38);">
-                            {% for key, value in result.items() %}
-                                {% for v in value  %}
-                                    <h3>Step {{ loop.index }} </h3>
-                                    <h4> {{ v.narrative }}Walk for {{ v.distance }} miles</h4>
-                                {% endfor %}
+                            {% for direction in result.directions %}
+                              {% for value in direction %}
+                              <h1>Step {{ loop.index }} {{ direction.narrative }}Walk for {{ direction.distance }} miles</h1>
+                              {% endfor %}
                             {% endfor %}
                             <div class="card-header d-flex justify-content-between" role="tab">
                                 <h5 class="d-flex mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route 1</a></h5>
