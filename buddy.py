@@ -105,7 +105,7 @@ def random_move_from_midpoint(midpoint):
 def get_map(start, end):
     params = {'key': key, 'size': '600, 400', 'start': start, 'end': end}
     res = requests.get('https://www.mapquestapi.com/staticmap/v5/map', params=params).content
-    image = open("map.jpeg", "wb")
+    image = open("map.jpg", "wb")
     image.write(res)
 
 def get_map_markers(directions, start, end):
