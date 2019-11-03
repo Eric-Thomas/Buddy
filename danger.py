@@ -50,7 +50,11 @@ def point_danger(coordinates):
         danger += d
     return danger
 
-def route_danger(route):
+def route_danger(route, length):
+    i = 0
+    while len(route) < length:
+        route.append(route[i])
+        i += 1
     danger = 0
     for point in route:
         danger += point_danger(point)
