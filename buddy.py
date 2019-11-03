@@ -1,8 +1,7 @@
 from flask import Flask, request, render_template
 import requests
 import json
-import pprint
-import random
+import danger
 
 key = 'D2ZCny0cmDMUDUbsavWda8qvTD9K3iRV'
 app = Flask(__name__)
@@ -17,15 +16,17 @@ def get_directions():
     pp = pprint.PrettyPrinter()
     print(parsed_json)
     resp = {'directions': [], 'alternateRoutes': [{'directions': [], 'crimeRating': None}], 'from': start, 'to': end, 'crimeRating': None}
+    route = []
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
             data['distance'] = maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
+            route.append(maneuver['startPoint'])
             resp['directions'].append(data)
-    #TODO: replace with JPs crime data
-    resp['crimeRating'] = random.randint(0,100)
+
+    resp['crimeRating'] = danger.route_danger(route)
 
 
     i = 0
