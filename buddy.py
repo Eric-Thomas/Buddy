@@ -15,7 +15,7 @@ def get_directions():
     params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'maxRoutes': 5, 'timeOverage': 200}
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
-    resp = {'directions': [], 'alternateRoutes': [{'directions': [], 'crimeRating': None, 'realTime': None}], 'from': start, 'to': end, 'crimeRating': None, 'realTime': None}
+    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end, 'crimeRating': None}
     turns = []
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
@@ -28,6 +28,7 @@ def get_directions():
 
     resp['crimeRating'] = danger.route_danger(turns)/len(turns)
 
+    alt_found = False
     i = 0
     try:
         for alt_route in parsed_json['route']['alternateRoutes']:
@@ -44,11 +45,13 @@ def get_directions():
             resp['alternateRoutes'][i]['directions'].append(route)
             resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(turns)/len(turns)
             i += 1
+            alt_found = True
     except Exception as e:
         print("exception: " + str(e))
 
     for i in range(3 - len(resp['alternateRoutes'])):
         resp['alternateRoutes'].append(get_more_routes(start, end, get_midpoint(resp)))
+    
 
     get_map(start, end)
     return render_template('directions.html', result = resp)
