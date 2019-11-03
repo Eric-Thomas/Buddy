@@ -46,26 +46,15 @@
     </header>
 
     <div class="footer-dark" style="padding-top: 20px;padding-bottom: 1px;">
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-sm-6 col-md-3 item">
-                        <h3>About</h3>
-                        <ul>
-                            <li><a href="#">Company</a></li>
-                            <li><a href="#">Team</a></li>
-                            <li><a href="#">Careers</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-6 item text">
-                        <h3>Buddy</h3>
-                        <p>Buddy Description</p>
+            <footer>
+                <div class="container">
+                    <div class="row">
+                        <p>Buddy is a project developed by JP Dahms, Michael Huang, and Eric Thomas for Hack Ohio.</p>
+                        <p class="copyright">Buddy © 2019</p>
                     </div>
                 </div>
-                <p class="copyright">Buddy © 2019</p>
-            </div>
-        </footer>
-    </div>
+            </footer>
+        </div>
     <script>
         var directionsArray = [];
         var result = JSON.parse('{{result| tojson}}');
@@ -91,11 +80,7 @@
                 tempCrimeRating = ""
                 for (direction of route.directions ){
                   for (step of direction){
-<<<<<<< HEAD
-                    tempSteps += "Step " + index + " " + step.narrative + " Walk for " + step.distance + " miles<br>";
-=======
                     tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "<br>";
->>>>>>> 24581f1f1bc664e0ac2c568cf8b6be3837567279
                     index++;
                   }
                 }
