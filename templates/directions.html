@@ -21,59 +21,29 @@
         </div>
     </nav>
     <header class="d-xl-flex flex-grow-1 flex-fill align-items-xl-end masthead text-white text-center" style="background: url('bg-masthead.jpg')no-repeat center center;padding-top: 100px;padding-bottom: 400px;background-image: url(&quot;none&quot;);">
-        <div class="container">
-            <div class="row" style="background-color: rgba(118,118,118,0.06);padding-bottom: 80px;">
-                <div class="col-xl-9 mx-auto">
-                    <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
-                    <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.&nbsp;</p>
-                </div>
-                <img src="../static/img/map.jpg" height="600" width="400"> 
-                    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-                    <div class="text-light" role="tablist" id="accordion-1">
-                        <div class="card" style="background-color: rgba(255,255,255,0.38);">
-                            <div class="card-header d-flex justify-content-between" role="tab">
-
-                                <h5 class="d-flex mb-0">
-                                    <!-- <a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route 1</a> -->
-                                    <button class="btn btn-link" type="button" onclick="toggleAccordion()" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"style="font-size: 18px;color: rgb(165,208,255);">
-                                        Route 1
-                                    </button>
-                                </h5>
-                                <p style="font-size: 18px;margin-bottom: 0px;">Crime Rating: {{result.crimeRating}}</p>
-                            </div>
-                        </div>
-                        <div id= "1" class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="background-color: rgba(0, 0, 0, 0.37);">
-                                <div class="card-body">
-                                        {% for direction in result.directions %}
-                                        <h4 style="font-size: 8px;">Step {{ loop.index }} {{ direction.narrative }}Walk for {{ direction.distance }} miles</h4>
-                                      {% endfor %}
-                                </div>
-                        </div>
-                        {% for altRoute in result.alternateRoutes %}
-                        <div class="card" style="background-color: rgba(255,255,255,0.38);">
-                            <div class="card-header d-flex justify-content-between" role="tab">
-                                <h5 class="d-flex mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route {{loop.index + 1}}</a></h5>
-                                <p style="font-size: 18px;margin-bottom: 0px;">Crime Rating: {{altRoute.crimeRating}}</p>
-                            </div>
-                        </div>
-                        <div id= "1" class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="background-color: rgba(0, 0, 0, 0.37);">
-                            <div class="card-body">
-                                {% for direction in altRoute.directions %}
-                                    {% for step in direction %}
-                                        <h4 style="font-size: 8px;">Step {{ loop.index }} {{ step.narrative }} Walk for {{ step.distance }} miles</h4>
-                                    {% endfor %}
-                                {% endfor %}
-                            </div>
+        <div class="container flex-grow-1" style="background-color: rgba(111,111,111,0.15);">
+                <div class="row">
+                    <div class="col-xl-9 mx-auto">
+                            <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
+                            <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.</p>
                     </div>
-                        {% endfor %}
-                        <p id = "blahblah"></p>
+                </div>
+                <div class="row">
+                    <div class="col-md-6"><img width="600px" height="400px"></div>
+                    <div class="col-md-6" style="background-color: rgba(0, 0, 0, 0.37);">
+                        <div class="d-xl-flex align-items-xl-center btn-group btn-group-toggle" data-toggle="buttons">
+                            <label onclick="toggleDirections(1)"class="btn btn-secondary active" style="background-color: rgba(23,135,48,0.49);">1<input type="radio" name="options" checked=""></label>
+                            <label onclick="toggleDirections(2)"class="btn btn-secondary" style="background-color: rgba(225,177,7,0.51);">2<input type="radio" name="options" checked=""></label>
+                            <label onclick="toggleDirections(3)"class="btn btn-secondary" style="background-color: rgba(248,128,41,0.51);">3<input type="radio" name="options" checked=""></label>
+                            <label onclick="toggleDirections(4)"class="btn btn-secondary" style="background-color: rgba(198,12,0,0.53);">4<input type="radio" name="options" checked=""></label></div>
+                        <p id="route-number"style="font-size: 18px;margin-bottom: 0px;"></p>
+                        <p id="route-crime-rating"style="font-size: 18px;margin-bottom: 0px;"></p>
+                        <h4 id="route-paragraph"style="font-size: 14px;"></h4>
                     </div>
                 </div>
             </div>
-        </div>
     </header>
 
-    
     <div class="footer-dark" style="padding-top: 20px;padding-bottom: 1px;">
         <footer>
             <div class="container">
@@ -132,11 +102,15 @@
             }
             console.log(directionsArray);
         }
-        function toggleAccordion() {
-        //   var card = document.getElementById(cardId);
-            //document.getElementsByClassName("item-1").classList.toggle('collapse');
-            document.getElementById("blahblah").innerHTML = "BLAH BLAH BLAH";
-          
+        function toggleDirections(button) {
+            var currentDirection = directionsArray[button - 1];
+            var routeNumber = document.getElementById("route-number");
+            var routeCrimeRating = document.getElementById("route-crime-rating");
+            var paragraph = document.getElementById("route-paragraph");
+            routeNumber.innerHTML = "Route " + button;
+            routeCrimeRating.innerHTML = "Crime Rating: "+ currentDirection.crimeRating;
+            paragraph.innerHTML = currentDirection.steps;
+
           
         }
     </script>
