@@ -15,7 +15,7 @@ def get_directions():
     params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'maxRoutes': 5, 'timeOverage': 200}
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
-    resp = {'directions': [], 'alternateRoutes': [{'directions': [], 'crimeRating': None}], 'from': start, 'to': end, 'crimeRating': None}
+    resp = {'directions': [], 'alternateRoutes': [{'directions': [], 'crimeRating': None, 'realTime': None}], 'from': start, 'to': end, 'crimeRating': None, 'realTime': None}
     turns = []
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
@@ -26,7 +26,7 @@ def get_directions():
             turns.append(maneuver['startPoint'])
             resp['directions'].append(data)
 
-    resp['crimeRating'] = danger.route_danger(turns)
+    resp['crimeRating'] = danger.route_danger(turns)/len(turns)
 
     i = 0
     try:
@@ -42,7 +42,7 @@ def get_directions():
                     turns.append(maneuver['startPoint'])
                     route.append(data)
             resp['alternateRoutes'][i]['directions'].append(route)
-            resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(turns)
+            resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(turns)/len(turns)
             i += 1
     except Exception as e:
         print("exception: " + str(e))

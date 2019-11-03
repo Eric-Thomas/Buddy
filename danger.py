@@ -19,7 +19,7 @@ crime_file = open("crimes.txt", "a")
 #         line_count += 1
 #     print(f'Processed {line_count} lines.')
 
-# for crime in crime_addresses[1250:]:
+# for crime in crime_addresses[1300:]:
 #     try:
 #         location = geolocator.geocode(crime)
 #         coordinates = (location.latitude, location.longitude)
