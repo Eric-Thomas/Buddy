@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import requests
 import json
 import pprint
+import random
 
 key = 'D2ZCny0cmDMUDUbsavWda8qvTD9K3iRV'
 app = Flask(__name__)
@@ -14,7 +15,8 @@ def get_directions():
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
     pp = pprint.PrettyPrinter()
-    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end}
+    print(parsed_json)
+    resp = {'directions': [], 'alternateRoutes': [{'directions': [], 'crimeRating': None}], 'from': start, 'to': end, 'crimeRating': None}
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
@@ -22,23 +24,28 @@ def get_directions():
             data['distance'] = maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             resp['directions'].append(data)
+    #TODO: replace with JPs crime data
+    resp['crimeRating'] = random.randint(0,100)
 
 
-    try:
-        for alt_route in parsed_json['route']['alternateRoutes']:
-            route = []
-            for leg in alt_route['route']['legs']:
-                for maneuver in leg['maneuvers']:
-                    data = {'narrative': '', 'distance': '', 'startPoint': ''}
-                    data['narrative'] = maneuver['narrative']
-                    data['distance'] = maneuver['distance']
-                    data['startPoint'] = maneuver['startPoint']
-                    route.append(data)
-            resp['alternateRoutes'].append(route)
-    except:
-        print('there are no alternate routes')
+    i = 0
+    # try:
+    for alt_route in parsed_json['route']['alternateRoutes']:
+        route = []
+        for leg in alt_route['route']['legs']:
+            for maneuver in leg['maneuvers']:
+                data = {'narrative': '', 'distance': '', 'startPoint': ''}
+                data['narrative'] = maneuver['narrative']
+                data['distance'] = maneuver['distance']
+                data['startPoint'] = maneuver['startPoint']
+                route.append(data)
+        resp['alternateRoutes'][i]['directions'].append(route)
+        #TODO: replace with JPs crime data
+        resp['alternateRoutes'][i]['crimeRating'] = random.randint(0,100)
+        i += 1
+    # except:
+    #     print('there are no alternate routes')
 
-    print(resp)
     return render_template('directions.html', result = resp)
 
 @app.route('/')
