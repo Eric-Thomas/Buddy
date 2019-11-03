@@ -107,4 +107,4 @@ venv.bak/
 .DS_Store
 
 # Images
-.static/img/map.jpg
+static/img/map.jpg
