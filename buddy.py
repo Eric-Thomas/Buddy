@@ -26,7 +26,7 @@ def get_directions():
             turns.append(maneuver['startPoint'])
             resp['directions'].append(data)
 
-    resp['realTime'] = str(parsed_json['route']['realTime']/60)
+    resp['realTime'] = '%.0f' % (parsed_json['route']['realTime']/60)
     resp['crimeRating'] = danger.route_danger(turns)/len(turns)
 
     alt_found = False
@@ -45,7 +45,7 @@ def get_directions():
                     route.append(data)
             resp['alternateRoutes'][i]['directions'].append(route)
             resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(turns)/len(turns)
-            resp['alternateRoutes'][i]['realTime'] = str(alt_route['route']['realTime']/60)
+            resp['alternateRoutes'][i]['realTime'] = '%.0f' % (alt_route['route']['realTime']/60)
             i += 1
             alt_found = True
     except Exception as e:
@@ -56,7 +56,6 @@ def get_directions():
     
 
     get_map(start, end)
-    return resp
     return render_template('directions.html', result = resp)
 
 @app.route('/')
@@ -94,7 +93,7 @@ def get_more_routes(start, end, midpoint):
             turns.append(maneuver['startPoint'])
             resp['directions'][0].append(data)
 
-    resp['realTime'] = str((resp['realTime'] + parsed_json['route']['realTime'])/60)
+    resp['realTime'] = '%.0f' % ((resp['realTime'] + parsed_json['route']['realTime'])/60)
     resp['crimeRating'] = danger.route_danger(turns)/2;
     return resp
 

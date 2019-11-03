@@ -109,7 +109,8 @@
             tempCrimeRating = result.crimeRating;
             directionsArray.push({
                 steps: tempSteps,
-                crimeRating: tempCrimeRating
+                crimeRating: tempCrimeRating,
+                realTime: result.realTime
             });
 
             for (route of result.alternateRoutes){
@@ -125,7 +126,8 @@
                 tempCrimeRating = route.crimeRating;
                 directionsArray.push({
                     steps: tempSteps,
-                    crimeRating: tempCrimeRating
+                    crimeRating: tempCrimeRating,
+                    realTime: route.realTime
                 });
             }
             console.log(directionsArray);
