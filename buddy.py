@@ -15,21 +15,24 @@ def get_directions():
     params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'maxRoutes': 5, 'timeOverage': 200}
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
-    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end, 'crimeRating': None, 'realTime': None, 'safeSortIndexes': [], 'speedSortIndexes': []}
+    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end, 'crimeRating': None, 'realTime': None, 'distance': None}
     turns = []
+    distance = 0
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
             data['distance'] = maneuver['distance']
+            distance += maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             turns.append(maneuver['startPoint'])
             resp['directions'].append(data)
 
     resp['realTime'] = '%.0f' % (parsed_json['route']['realTime']/60)
     resp['crimeRating'] = '%.2f' % (danger.route_danger(turns, 0) * 10)
+    resp['distance'] = '%.1f' % distance
 
-    alt_found = False
+    distance = 0
     i = 0
     try:
         for alt_route in parsed_json['route']['alternateRoutes']:
@@ -46,8 +49,9 @@ def get_directions():
             resp['alternateRoutes'][i]['directions'].append(route)
             resp['alternateRoutes'][i]['crimeRating'] = '%.2f' % (danger.route_danger(turns, 0) * 10)
             resp['alternateRoutes'][i]['realTime'] = '%.0f' % (alt_route['route']['realTime']/60)
+            resp['alternateRoutes'][i]['distance'] = '%0.1f' % distance
+            distance += maneuver['distance']
             i += 1
-            alt_found = True
     except Exception as e:
         print("exception: " + str(e))
 
@@ -70,11 +74,13 @@ def get_more_routes(start, end, midpoint):
     parsed_json = json.loads(content)
     resp = {'directions': [[]], 'crimeRating': None, 'realTime': None}
     turns = []
+    distance = 0
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
             data['distance'] = maneuver['distance']
+            distance += maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             turns.append(maneuver['startPoint'])
             resp['directions'][0].append(data)
@@ -89,12 +95,14 @@ def get_more_routes(start, end, midpoint):
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
             data['distance'] = maneuver['distance']
+            distance += maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             turns.append(maneuver['startPoint'])
             resp['directions'][0].append(data)
 
     resp['realTime'] = '%.0f' % ((resp['realTime'] + parsed_json['route']['realTime'])/60)
     resp['crimeRating'] = '%.2f' % (danger.route_danger(turns, 0) * 10)
+    resp['distance'] = '%0.1f' % distance
     return resp
 
 def get_midpoint(resp):
@@ -106,8 +114,8 @@ def get_midpoint(resp):
     return midpoint
 
 def random_move_from_midpoint(midpoint):
-    midpoint['lng'] += random.uniform(-0.05, 0.05)
-    midpoint['lat'] += random.uniform(-0.05, 0.05)
+    midpoint['lng'] += random.uniform(-0.005, 0.005)
+    midpoint['lat'] += random.uniform(-0.005, 0.005)
     return midpoint
 
 def get_map(start, end):

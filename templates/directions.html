@@ -23,15 +23,18 @@
                     <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
                     <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.</p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col d-md-flex align-items-md-center" style="width: 600px;max-width: 100%;"><img width="600px" height="400px" src="../static/img/map.jpg"></div>
-                <div class="col" style="background-color: rgba(0, 0, 0, 0.37);">
-                    <div class="d-flex d-xl-flex align-items-xl-center btn-group btn-group-toggle" data-toggle="buttons">                            
-                        <label onclick="toggleDirections(1)"class="btn btn-secondary active" style="background-color: rgba(23,135,48,0.49);">1<input type="radio" name="options" checked=""></label>
-                        <label onclick="toggleDirections(2)"class="btn btn-secondary" style="background-color: rgba(225,177,7,0.51);">2<input type="radio" name="options" checked=""></label>
-                        <label onclick="toggleDirections(3)"class="btn btn-secondary" style="background-color: rgba(248,128,41,0.51);">3<input type="radio" name="options" checked=""></label>
-                        <label onclick="toggleDirections(4)"class="btn btn-secondary" style="background-color: rgba(198,12,0,0.53);">4<input type="radio" name="options" checked=""></label>
+                <div class="row">
+                        <div class="col d-md-flex align-items-md-center" style="width: 600px;max-width: 100%;padding-left: 0px;"><img width="600px" height="400px" src="../static/img/map.jpg"></div>
+                            <div class="col" style="background-color: rgba(0, 0, 0, 0.37);margin-left: 15px;">
+                            <div class="d-flex d-xl-flex align-items-xl-center btn-group btn-group-toggle" data-toggle="buttons">                            
+                            <label onclick="toggleDirections(1)"class="btn btn-secondary active" style="background-color: rgba(23,135,48,0.49);">1<input type="radio" name="options" checked=""></label>
+                            <label onclick="toggleDirections(2)"class="btn btn-secondary" style="background-color: rgba(225,177,7,0.51);">2<input type="radio" name="options" checked=""></label>
+                            <label onclick="toggleDirections(3)"class="btn btn-secondary" style="background-color: rgba(248,128,41,0.51);">3<input type="radio" name="options" checked=""></label>
+                            <label onclick="toggleDirections(4)"class="btn btn-secondary" style="background-color: rgba(198,12,0,0.53);">4<input type="radio" name="options" checked=""></label></div>
+                        <p id="route-number"style="font-size: 18px;margin-bottom: 0px;"></p>
+                        <p id="route-crime-rating"style="font-size: 18px;margin-bottom: 0px;"></p>
+                        <p id="route-time-and-distance" style="font-size: 18px;margin-bottom: 0px;"></p>
+                        <h4 id="route-paragraph"style="font-size: 14px;"></h4>
                     </div>
                     <p id="route-number"style="font-size: 18px;margin-bottom: 0px;"></p>
                     <p id="route-crime-rating"style="font-size: 18px;margin-bottom: 0px;"></p>
@@ -71,14 +74,15 @@
             var tempSteps = ""
             var tempCrimeRating = ""
             for (direction of result.directions ){
-                tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
+                tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + " miles<br>";
                 index++;
             }
             tempCrimeRating = result.crimeRating;
             directionsArray.push({
                 steps: tempSteps,
                 crimeRating: tempCrimeRating,
-                realTime: result.realTime
+                realTime: result.realTime,
+                distance: result.distance
             });
 
             for (route of result.alternateRoutes){
@@ -87,7 +91,7 @@
                 tempCrimeRating = ""
                 for (direction of route.directions ){
                   for (step of direction){
-                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "<br>";
+                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + " miles<br>";
                     index++;
                   }
                 }
@@ -95,7 +99,8 @@
                 directionsArray.push({
                     steps: tempSteps,
                     crimeRating: tempCrimeRating,
-                    realTime: route.realTime
+                    realTime: route.realTime,
+                    distance: route.distance
                 });
             }
             sortByCrime();
@@ -105,11 +110,11 @@
             var currentDirection = directionsArray[button - 1];
             var routeNumber = document.getElementById("route-number");
             var routeCrimeRating = document.getElementById("route-crime-rating");
-            var routeRealTime = document.getElementById("route-real-time")
+            var routeTimeAndDistance = document.getElementById("route-time-and-distance")
             var paragraph = document.getElementById("route-paragraph");
             routeNumber.innerHTML = "Route " + button;
             routeCrimeRating.innerHTML = "Crime Rating: "+ currentDirection.crimeRating;
-            routeRealTime.innerHTML = "Estimated time: " + currentDirection.realTime + " minutes";
+            routeTimeAndDistance.innerHTML = "Estimated time: " + currentDirection.realTime + " minutes       Distance: " + currentDirection.distance + " miles<br><br>";
             paragraph.innerHTML = currentDirection.steps;
           }
 
