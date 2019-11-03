@@ -114,8 +114,8 @@ def get_midpoint(resp):
     return midpoint
 
 def random_move_from_midpoint(midpoint):
-    midpoint['lng'] += random.uniform(-0.005, 0.005)
-    midpoint['lat'] += random.uniform(-0.005, 0.005)
+    midpoint['lng'] += random.uniform(-0.01, 0.01)
+    midpoint['lat'] += random.uniform(-0.01, 0.01)
     return midpoint
 
 def get_map(start, end):
