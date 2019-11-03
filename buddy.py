@@ -22,7 +22,7 @@ def get_directions():
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
-            data['distance'] = maneuver['distance']
+            data['distance'] = format_distance(maneuver['distance'])
             distance += maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             turns.append(maneuver['startPoint'])
@@ -42,7 +42,7 @@ def get_directions():
                 for maneuver in leg['maneuvers']:
                     data = {'narrative': '', 'distance': '', 'startPoint': ''}
                     data['narrative'] = maneuver['narrative']
-                    data['distance'] = maneuver['distance']
+                    data['distance'] = format_distance(maneuver['distance'])
                     data['startPoint'] = maneuver['startPoint']
                     turns.append(maneuver['startPoint'])
                     route.append(data)
@@ -79,7 +79,7 @@ def get_more_routes(start, end, midpoint):
         for maneuver in leg['maneuvers']:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
-            data['distance'] = maneuver['distance']
+            data['distance'] = format_distance(maneuver['distance'])
             distance += maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             turns.append(maneuver['startPoint'])
@@ -91,10 +91,10 @@ def get_more_routes(start, end, midpoint):
     content = requests.post('http://www.mapquestapi.com/directions/v2/route', params=params).content
     parsed_json = json.loads(content)
     for leg in parsed_json['route']['legs']:
-        for maneuver in leg['maneuvers']:
+        for maneuver in leg['maneuvers'][1:]:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
-            data['distance'] = maneuver['distance']
+            data['distance'] = format_distance(maneuver['distance'])
             distance += maneuver['distance']
             data['startPoint'] = maneuver['startPoint']
             turns.append(maneuver['startPoint'])
@@ -141,6 +141,15 @@ def get_coordinates(directions):
         coords.append(str(lat_and_long['lat']) + ', ' + str(lat_and_long['lng']))
 
     return coords
+
+def format_distance(distance):
+    if distance < 0.1:
+        distance = distance * 5280
+        distance = '%0.f' % distance
+        return str(distance) + " feet"
+    else:
+        distance = '%0.1f' % distance
+        return str(distance) + ' miles'
 
 if __name__ == '__main__':
    app.run(debug=True)
