@@ -100,7 +100,8 @@
                     realTime: route.realTime
                 });
             }
-            console.log(directionsArray);
+            sortByCrime();
+            toggleDirections(1);
         }
         function toggleDirections(button) {
             var currentDirection = directionsArray[button - 1];
@@ -115,10 +116,10 @@
           }
 
           function sortByCrime(){
-
+            directionsArray.sort(function(a, b){return a.crimeRating-b.crimeRating});
           }
           function sortByTime(){
-            
+            directionsArray.sort(function(a, b){return a.realTime-b.realTime});
           }
     </script>
     <script src="assets/js/jquery.min.js"></script>
