@@ -92,11 +92,33 @@
     </div>
     <script>
         var directionsArray = [];
+        var result = '{{result| tojson}}';
+        console.log(result)
         function parseResults(){
-            for (direction of '{{ result.directions }}' ){
-                console.log(direction.narrative);
-                
+            var index = 1;
+            var obj = {
+                steps : "",
+                crimeRating : ""
             }
+            for (direction of result.directions ){
+                obj.steps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
+                index++;
+            }
+            obj.crimeRating = result.crimeRating;
+            directionsArray.push(obj);
+
+            for (route of result.alternateRoutes){
+                obj.steps = "";
+                obj.crimeRating = "";
+                index = 1;
+                for (direction of route.directions ){
+                    obj.steps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
+                    index++;
+                }
+                obj.crimeRating = route.crimeRating;
+                directionsArray.push(obj);
+            }
+            console.log(directionsArray);
         }
         function toggleAccordion() {
         //   var card = document.getElementById(cardId);
