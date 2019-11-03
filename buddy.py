@@ -15,7 +15,7 @@ def get_directions():
     params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'maxRoutes': 5, 'timeOverage': 200}
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
-    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end, 'crimeRating': None, 'realTime': None}
+    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end, 'crimeRating': None, 'realTime': None, 'safeSortIndexes': [], 'speedSortIndexes': []}
     turns = []
     for leg in parsed_json['route']['legs']:
         for maneuver in leg['maneuvers']:
