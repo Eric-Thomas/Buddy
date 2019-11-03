@@ -36,7 +36,7 @@ def get_directions():
 
     distance = 0
     i = 0
-    if 'alternateRoutes' not in parsed_json['route']:
+    if 'alternateRoutes' in parsed_json['route']:
         for alt_route in parsed_json['route']['alternateRoutes']:
             turns = []
             route = []
