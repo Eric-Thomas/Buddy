@@ -90,8 +90,8 @@ def get_more_routes(start, end, midpoint):
     params = {'key': key, 'from': midpoint_str, 'to': end, 'routeType': 'pedestrian'}
     content = requests.post('http://www.mapquestapi.com/directions/v2/route', params=params).content
     parsed_json = json.loads(content)
-    for leg in parsed_json['route']['legs'][1:]:
-        for maneuver in leg['maneuvers']:
+    for leg in parsed_json['route']['legs']:
+        for maneuver in leg['maneuvers'][1:]:
             data = {'narrative': '', 'distance': '', 'startPoint': ''}
             data['narrative'] = maneuver['narrative']
             data['distance'] = format_distance(maneuver['distance'])
