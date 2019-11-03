@@ -29,9 +29,10 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6"><img width="600px" height="400px" src="../static/img/map.jpg"></div>
-                    <div class="col-md-6" style="background-color: rgba(0, 0, 0, 0.37);">
-                            <div class="d-flex d-xl-flex align-items-xl-center btn-group btn-group-toggle" data-toggle="buttons">                            <label onclick="toggleDirections(1)"class="btn btn-secondary active" style="background-color: rgba(23,135,48,0.49);">1<input type="radio" name="options" checked=""></label>
+                        <div class="col d-md-flex align-items-md-center" style="width: 600px;max-width: 100%;padding-left: 0px;"><img width="600px" height="400px" src="../static/img/map.jpg"></div>
+                            <div class="col" style="background-color: rgba(0, 0, 0, 0.37);margin-left: 15px;">
+                            <div class="d-flex d-xl-flex align-items-xl-center btn-group btn-group-toggle" data-toggle="buttons">                            
+                            <label onclick="toggleDirections(1)"class="btn btn-secondary active" style="background-color: rgba(23,135,48,0.49);">1<input type="radio" name="options" checked=""></label>
                             <label onclick="toggleDirections(2)"class="btn btn-secondary" style="background-color: rgba(225,177,7,0.51);">2<input type="radio" name="options" checked=""></label>
                             <label onclick="toggleDirections(3)"class="btn btn-secondary" style="background-color: rgba(248,128,41,0.51);">3<input type="radio" name="options" checked=""></label>
                             <label onclick="toggleDirections(4)"class="btn btn-secondary" style="background-color: rgba(198,12,0,0.53);">4<input type="radio" name="options" checked=""></label></div>
@@ -88,7 +89,7 @@
                 tempCrimeRating = ""
                 for (direction of route.directions ){
                   for (step of direction){
-                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "\n";
+                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "<br>";
                     index++;
                   }
                 }
@@ -109,8 +110,6 @@
             routeNumber.innerHTML = "Route " + button;
             routeCrimeRating.innerHTML = "Crime Rating: "+ currentDirection.crimeRating;
             paragraph.innerHTML = currentDirection.steps;
-
-          
         }
     </script>
     <script src="assets/js/jquery.min.js"></script>

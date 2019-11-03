@@ -1,0 +1,50 @@
+<div class="container">
+        <div class="row" style="background-color: rgba(118,118,118,0.06);padding-bottom: 80px;">
+            <div class="col-xl-9 mx-auto">
+                <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
+                <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.&nbsp;</p>
+            </div>
+            <img src="../map.jpg" height="600" width="400"> 
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                <div class="text-light" role="tablist" id="accordion-1">
+                    <div class="card" style="background-color: rgba(255,255,255,0.38);">
+                        <div class="card-header d-flex justify-content-between" role="tab">
+
+                            <h5 class="d-flex mb-0">
+                                <!-- <a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route 1</a> -->
+                                <button class="btn btn-link" type="button" onclick="toggleAccordion()" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"style="font-size: 18px;color: rgb(165,208,255);">
+                                    Route 1
+                                </button>
+                            </h5>
+                            <p style="font-size: 18px;margin-bottom: 0px;">Crime Rating: {{result.crimeRating}}</p>
+                        </div>
+                    </div>
+                    <div id= "1" class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="background-color: rgba(0, 0, 0, 0.37);">
+                            <div class="card-body">
+                                    {% for direction in result.directions %}
+                                    <h4 style="font-size: 8px;">Step {{ loop.index }} {{ direction.narrative }}Walk for {{ direction.distance }} miles</h4>
+                                  {% endfor %}
+                            </div>
+                    </div>
+                    {% for altRoute in result.alternateRoutes %}
+                    <div class="card" style="background-color: rgba(255,255,255,0.38);">
+                        <div class="card-header d-flex justify-content-between" role="tab">
+                            <h5 class="d-flex mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route {{loop.index + 1}}</a></h5>
+                            <p style="font-size: 18px;margin-bottom: 0px;">Crime Rating: {{altRoute.crimeRating}}</p>
+                        </div>
+                    </div>
+                    <div id= "1" class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="background-color: rgba(0, 0, 0, 0.37);">
+                        <div class="card-body">
+                            {% for direction in altRoute.directions %}
+                                {% for step in direction %}
+                                    <h4 style="font-size: 8px;">Step {{ loop.index }} {{ step.narrative }} Walk for {{ step.distance }} miles</h4>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                </div>
+                    {% endfor %}
+                    
+                </div>
+            </div>
+        </div>
+    </div>
