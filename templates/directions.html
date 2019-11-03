@@ -46,6 +46,7 @@
                                         {% for direction in result.directions %}
                                         <h4 style="font-size: 8px;">Step {{ loop.index }} {{ direction.narrative }}Walk for {{ direction.distance }} miles</h4>
                                       {% endfor %}
+                                      <img src="map.jpeg">
                                 </div>
                         </div>
                         {% for altRoute in result.alternateRoutes %}

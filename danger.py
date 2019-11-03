@@ -54,5 +54,4 @@ def route_danger(route):
     danger = 0
     for point in route:
         danger += point_danger(point)
-    print(danger)
     return danger

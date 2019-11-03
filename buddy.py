@@ -2,6 +2,7 @@ from flask import Flask, request, render_template
 import requests
 import json
 import danger
+import random
 
 
 key = 'D2ZCny0cmDMUDUbsavWda8qvTD9K3iRV'
@@ -27,7 +28,6 @@ def get_directions():
 
     resp['crimeRating'] = danger.route_danger(turns)
 
-
     i = 0
     try:
         for alt_route in parsed_json['route']['alternateRoutes']:
@@ -47,11 +47,84 @@ def get_directions():
     except Exception as e:
         print("exception: " + str(e))
 
+    for i in range(3 - len(resp['alternateRoutes'])):
+        resp['alternateRoutes'].append(get_more_routes(start, end, get_midpoint(resp)))
+
+    get_map(start, end)
     return render_template('directions.html', result = resp)
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+def get_more_routes(start, end, midpoint):
+    midpoint = random_move_from_midpoint(midpoint)
+    midpoint_str = str(midpoint['lat']) + ", " + str(midpoint['lng'])
+    params = {'key': key, 'from': start, 'to': midpoint_str, 'routeType': 'pedestrian'}
+    content = requests.post('http://www.mapquestapi.com/directions/v2/route', params=params).content
+    parsed_json = json.loads(content)
+    resp = {'directions': [[]], 'crimeRating': None}
+    turns = []
+    for leg in parsed_json['route']['legs']:
+        for maneuver in leg['maneuvers']:
+            data = {'narrative': '', 'distance': '', 'startPoint': ''}
+            data['narrative'] = maneuver['narrative']
+            data['distance'] = maneuver['distance']
+            data['startPoint'] = maneuver['startPoint']
+            turns.append(maneuver['startPoint'])
+            resp['directions'][0].append(data)
+
+    params = {'key': key, 'from': midpoint_str, 'to': end, 'routeType': 'pedestrian'}
+    content = requests.post('http://www.mapquestapi.com/directions/v2/route', params=params).content
+    parsed_json = json.loads(content)
+    for leg in parsed_json['route']['legs']:
+        for maneuver in leg['maneuvers']:
+            data = {'narrative': '', 'distance': '', 'startPoint': ''}
+            data['narrative'] = maneuver['narrative']
+            data['distance'] = maneuver['distance']
+            data['startPoint'] = maneuver['startPoint']
+            turns.append(maneuver['startPoint'])
+            resp['directions'][0].append(data)
+
+    resp['crimeRating'] = danger.route_danger(turns)/2;
+    return resp
+
+def get_midpoint(resp):
+    start = resp['directions'][0]['startPoint']
+    end = resp['directions'][len(resp['directions'])-1]['startPoint']
+    midpoint = {}
+    midpoint['lng'] = (end['lng'] + start['lng'])/2
+    midpoint['lat'] = (end['lat'] + start['lat'])/2
+    return midpoint
+
+def random_move_from_midpoint(midpoint):
+    midpoint['lng'] += random.uniform(-0.05, 0.05)
+    midpoint['lat'] += random.uniform(-0.05, 0.05)
+    return midpoint
+
+def get_map(start, end):
+    params = {'key': key, 'size': '600, 400', 'start': start, 'end': end}
+    res = requests.get('https://www.mapquestapi.com/staticmap/v5/map', params=params).content
+    image = open("map.jpeg", "wb")
+    image.write(res)
+
+def get_map_markers(directions, start, end):
+    coords = get_coordinates(directions)
+    locations_param = ''
+    for cord in coords[:len(coords)]:
+        locations_param += str(cord)+'||'
+    locations_param += coords[len(coords) - 1]
+    params = {'key': key, 'locations': locations_param, 'size': '600, 400', 'start': start, 'end': end}
+    return requests.get('https://www.mapquestapi.com/staticmap/v5/map', params=params).content
+
+
+def get_coordinates(directions):
+    coords = []
+    for direction in directions:
+        lat_and_long = direction['startPoint']
+        coords.append(str(lat_and_long['lat']) + ', ' + str(lat_and_long['lng']))
+
+    return coords
 
 if __name__ == '__main__':
    app.run(debug=True)
