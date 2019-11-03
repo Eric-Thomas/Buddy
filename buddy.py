@@ -94,7 +94,7 @@ def get_more_routes(start, end, midpoint):
             resp['directions'][0].append(data)
 
     resp['realTime'] = '%.0f' % ((resp['realTime'] + parsed_json['route']['realTime'])/60)
-    resp['crimeRating'] = danger.route_danger(turns)/2;
+    resp['crimeRating'] = danger.route_danger(turns)/len(turns);
     return resp
 
 def get_midpoint(resp):
