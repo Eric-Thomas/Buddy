@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template
 import requests
 import json
-import danger
+
 
 key = 'D2ZCny0cmDMUDUbsavWda8qvTD9K3iRV'
 app = Flask(__name__)
@@ -13,7 +13,6 @@ def get_directions():
     params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'maxRoutes': 5, 'timeOverage': 200}
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
-    pp = pprint.PrettyPrinter()
     print(parsed_json)
     resp = {'directions': [], 'alternateRoutes': [{'directions': [], 'crimeRating': None}], 'from': start, 'to': end, 'crimeRating': None}
     route = []
@@ -26,7 +25,8 @@ def get_directions():
             route.append(maneuver['startPoint'])
             resp['directions'].append(data)
 
-    resp['crimeRating'] = danger.route_danger(route)
+    #resp['crimeRating'] = danger.route_danger(route)
+    resp['crimeRating'] = 7
 
 
     i = 0

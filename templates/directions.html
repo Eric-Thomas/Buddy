@@ -93,7 +93,8 @@
     <script>
         var directionsArray = [];
         function parseResults(){
-            for (direction of results.directions){
+            for (direction of '{{ result.directions }}' ){
+                console.log(direction.narrative);
                 
             }
         }
