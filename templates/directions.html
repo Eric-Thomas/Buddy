@@ -92,7 +92,7 @@
     </div>
     <script>
         var directionsArray = [];
-        var result = '{{result| tojson}}';
+        var result = JSON.parse('{{result| tojson}}');
         console.log(result)
         function parseResults(){
             var index = 1;
