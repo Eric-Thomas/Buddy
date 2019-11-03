@@ -96,29 +96,34 @@
         console.log(result)
         function parseResults(){
             var index = 1;
-            var obj = {
-                steps : "",
-                crimeRating : ""
-            }
+            var tempSteps = ""
+            var tempCrimeRating = ""
             for (direction of result.directions ){
-                obj.steps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
+                tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
                 index++;
             }
-            obj.crimeRating = result.crimeRating;
-            directionsArray.push(obj);
+            tempCrimeRating = result.crimeRating;
+            directionsArray.push({
+                steps: tempSteps,
+                crimeRating: tempCrimeRating
+            });
 
             for (route of result.alternateRoutes){
-                obj.steps = "";
-                obj.crimeRating = "";
                 index = 1;
+                tempSteps = "";
+                tempCrimeRating = ""
+                //console.log(route)
                 for (direction of route.directions ){
-                    obj.steps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
+                    tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
                     index++;
                 }
-                obj.crimeRating = route.crimeRating;
-                directionsArray.push(obj);
+                tempCrimeRating = route.crimeRating;
+                directionsArray.push({
+                    steps: tempSteps,
+                    crimeRating: tempCrimeRating
+                });
             }
-            console.log(directionsArray);
+            //console.log(directionsArray);
         }
         function toggleAccordion() {
         //   var card = document.getElementById(cardId);
