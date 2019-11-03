@@ -50,17 +50,21 @@
                                 </div>
                         </div>
                         {% for altRoute in result.alternateRoutes %}
-                          <div class="card" style="background-color: rgba(255,255,255,0.38);">
-                            {% for direction in altRoute.directions %}
-                              {% for step in direction %}
-                                <h4 style="font-size: 8px;">Step {{ loop.index }} {{ step.narrative }} Walk for {{ step.distance }} miles</h4>
-                              {% endfor %}
-                            {% endfor %}
+                        <div class="card" style="background-color: rgba(255,255,255,0.38);">
                             <div class="card-header d-flex justify-content-between" role="tab">
                                 <h5 class="d-flex mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route {{loop.index + 1}}</a></h5>
                                 <p style="font-size: 18px;margin-bottom: 0px;">Crime Rating: {{altRoute.crimeRating}}</p>
                             </div>
                         </div>
+                        <div id= "1" class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="background-color: rgba(0, 0, 0, 0.37);">
+                            <div class="card-body">
+                                {% for direction in altRoute.directions %}
+                                    {% for step in direction %}
+                                        <h4 style="font-size: 8px;">Step {{ loop.index }} {{ step.narrative }} Walk for {{ step.distance }} miles</h4>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                    </div>
                         {% endfor %}
                         <p id = "blahblah"></p>
                     </div>
