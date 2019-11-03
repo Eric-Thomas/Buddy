@@ -15,43 +15,28 @@ def get_directions():
     params = {'key': key, 'from': start, 'to': end, 'routeType': 'pedestrian', 'maxRoutes': 5, 'timeOverage': 200}
     content = requests.post('http://www.mapquestapi.com/directions/v2/alternateroutes', params=params).content
     parsed_json = json.loads(content)
-    resp = {'directions': [], 'alternateRoutes': [], 'from': start, 'to': end, 'crimeRating': None}
-    turns = []
-    for leg in parsed_json['route']['legs']:
-        for maneuver in leg['maneuvers']:
-            data = {'narrative': '', 'distance': '', 'startPoint': ''}
-            data['narrative'] = maneuver['narrative']
-            data['distance'] = maneuver['distance']
-            data['startPoint'] = maneuver['startPoint']
-            turns.append(maneuver['startPoint'])
-            resp['directions'].append(data)
+    resp = {'directions': [], 'turns': [], 'alternateRoutes': [], 'from': start, 'to': end, 'crimeRating': None}
 
-    resp['crimeRating'] = danger.route_danger(turns)/len(turns)
+    resp['directions'], resp['turns'] = get_route_and_turns(parsed_json['route']['legs'])
 
-    alt_found = False
-    i = 0
-    try:
+    if 'alternateRoutes' in parsed_json['route']:
         for alt_route in parsed_json['route']['alternateRoutes']:
-            turns = []
-            route = []
-            for leg in alt_route['route']['legs']:
-                for maneuver in leg['maneuvers']:
-                    data = {'narrative': '', 'distance': '', 'startPoint': ''}
-                    data['narrative'] = maneuver['narrative']
-                    data['distance'] = maneuver['distance']
-                    data['startPoint'] = maneuver['startPoint']
-                    turns.append(maneuver['startPoint'])
-                    route.append(data)
-            resp['alternateRoutes'][i]['directions'].append(route)
-            resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(turns)/len(turns)
-            i += 1
-            alt_found = True
-    except Exception as e:
-        print("exception: " + str(e))
+            route, turns = get_route_and_turns(alt_route['route']['legs'])
+            resp['alternateRoutes'].append({
+                'directions': route,
+                'turns': turns
+            })
 
-    for i in range(3 - len(resp['alternateRoutes'])):
+    while len(resp['alternateRoutes']) < 3:
         resp['alternateRoutes'].append(get_more_routes(start, end, get_midpoint(resp)))
-    
+
+    lengths = [len(resp['directions'])] + [len(alt['directions']) for alt in resp['alternateRoutes']]
+    max_length = max(lengths)
+    resp['crimeRating'] = danger.route_danger(resp['turns'], max_length)
+    print(resp.keys())
+    print(resp['alternateRoutes'][0].keys())
+    for i in range(3):
+        resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(resp['alternateRoutes'][i]['turns'], max_length)
 
     get_map(start, end)
     return render_template('directions.html', result = resp)
@@ -66,31 +51,31 @@ def get_more_routes(start, end, midpoint):
     params = {'key': key, 'from': start, 'to': midpoint_str, 'routeType': 'pedestrian'}
     content = requests.post('http://www.mapquestapi.com/directions/v2/route', params=params).content
     parsed_json = json.loads(content)
-    resp = {'directions': [[]], 'crimeRating': None}
-    turns = []
-    for leg in parsed_json['route']['legs']:
-        for maneuver in leg['maneuvers']:
-            data = {'narrative': '', 'distance': '', 'startPoint': ''}
-            data['narrative'] = maneuver['narrative']
-            data['distance'] = maneuver['distance']
-            data['startPoint'] = maneuver['startPoint']
-            turns.append(maneuver['startPoint'])
-            resp['directions'][0].append(data)
+    resp = {'directions': [[]], 'crimeRating': None, 'turns': []}
+    resp['directions'][0], resp['turns'] = get_route_and_turns(parsed_json['route']['legs'])
 
     params = {'key': key, 'from': midpoint_str, 'to': end, 'routeType': 'pedestrian'}
     content = requests.post('http://www.mapquestapi.com/directions/v2/route', params=params).content
     parsed_json = json.loads(content)
-    for leg in parsed_json['route']['legs']:
-        for maneuver in leg['maneuvers']:
-            data = {'narrative': '', 'distance': '', 'startPoint': ''}
-            data['narrative'] = maneuver['narrative']
-            data['distance'] = maneuver['distance']
-            data['startPoint'] = maneuver['startPoint']
-            turns.append(maneuver['startPoint'])
-            resp['directions'][0].append(data)
+    second_route, second_turns = get_route_and_turns(parsed_json['route']['legs'])
 
-    resp['crimeRating'] = danger.route_danger(turns)/2;
+    resp['directions'][0] += second_route
+    resp['turns'] += second_turns
+
     return resp
+
+def get_route_and_turns(legs):
+    route = []
+    turns = []
+    for leg in legs:
+        for maneuver in leg['maneuvers']:
+            turns.append(maneuver['startPoint'])
+            route.append({
+                'narrative': maneuver['narrative'],
+                'distance': maneuver['distance'],
+                'startPoint': maneuver['startPoint']
+            })
+    return route, turns
 
 def get_midpoint(resp):
     start = resp['directions'][0]['startPoint']
@@ -119,7 +104,6 @@ def get_map_markers(directions, start, end):
     locations_param += coords[len(coords) - 1]
     params = {'key': key, 'locations': locations_param, 'size': '600, 400', 'start': start, 'end': end}
     return requests.get('https://www.mapquestapi.com/staticmap/v5/map', params=params).content
-
 
 def get_coordinates(directions):
     coords = []
