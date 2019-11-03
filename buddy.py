@@ -27,7 +27,7 @@ def get_directions():
             resp['directions'].append(data)
 
     resp['realTime'] = '%.0f' % (parsed_json['route']['realTime']/60)
-    resp['crimeRating'] = danger.route_danger(turns)/len(turns)
+    resp['crimeRating'] = danger.route_danger(turns, 0)
 
     alt_found = False
     i = 0
@@ -44,7 +44,7 @@ def get_directions():
                     turns.append(maneuver['startPoint'])
                     route.append(data)
             resp['alternateRoutes'][i]['directions'].append(route)
-            resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(turns)/len(turns)
+            resp['alternateRoutes'][i]['crimeRating'] = danger.route_danger(turns, 0)
             resp['alternateRoutes'][i]['realTime'] = '%.0f' % (alt_route['route']['realTime']/60)
             i += 1
             alt_found = True
@@ -94,7 +94,7 @@ def get_more_routes(start, end, midpoint):
             resp['directions'][0].append(data)
 
     resp['realTime'] = '%.0f' % ((resp['realTime'] + parsed_json['route']['realTime'])/60)
-    resp['crimeRating'] = danger.route_danger(turns)/len(turns);
+    resp['crimeRating'] = danger.route_danger(turns, 0)
     return resp
 
 def get_midpoint(resp):
