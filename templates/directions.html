@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html class="text-dark" style="background-image: url(static/img/cxv7qut4pj221.jpg); background-repeat: no-repeat; background-color: rgb(40,45,50);">
+
+
+<head >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Buddy</title>
+    <meta name="description" content="Let's get you there safely">
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='bootstrap/css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/Footer-Dark.css') }}">
+
+</head>
+
+<body onload="parseResults()" class="text-dark" style="background-color: rgba(255,255,255,0);">
+    <nav class="navbar navbar-light navbar-expand bg-dark navigation-clean" style="opacity: 1;filter: brightness(100%);">
+        <div class="container"><a class="navbar-brand" href="/" style="background-color: rgba(255,255,255,0);color: rgba(255,255,255,0.9);">Buddy</a><button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"></button>
+            <div class="collapse navbar-collapse"
+                id="navcol-1" style="background-color: #ffffff;"></div>
+        </div>
+    </nav>
+    <header class="d-xl-flex flex-grow-1 flex-fill align-items-xl-end masthead text-white text-center" style="background: url('bg-masthead.jpg')no-repeat center center;padding-top: 100px;padding-bottom: 400px;background-image: url(&quot;none&quot;);">
+        <div class="container">
+            <div class="row" style="background-color: rgba(118,118,118,0.06);padding-bottom: 80px;">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="mb-5" style="font-size: 30px;">Directions from {{result.from}} to {{result.to}}</h1>
+                    <p>Buddy has found some routes and sorted them from safest to most dangerous according to crime data.&nbsp;</p>
+                </div>
+                <img src="../map.jpg" height="600" width="400"> 
+                    <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <div class="text-light" role="tablist" id="accordion-1">
+                        <div class="card" style="background-color: rgba(255,255,255,0.38);">
+                            <div class="card-header d-flex justify-content-between" role="tab">
+
+                                <h5 class="d-flex mb-0">
+                                    <!-- <a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route 1</a> -->
+                                    <button class="btn btn-link" type="button" onclick="toggleAccordion()" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"style="font-size: 18px;color: rgb(165,208,255);">
+                                        Route 1
+                                    </button>
+                                </h5>
+                                <p style="font-size: 18px;margin-bottom: 0px;">Crime Rating: {{result.crimeRating}}</p>
+                            </div>
+                        </div>
+                        <div id= "1" class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="background-color: rgba(0, 0, 0, 0.37);">
+                                <div class="card-body">
+                                        {% for direction in result.directions %}
+                                        <h4 style="font-size: 8px;">Step {{ loop.index }} {{ direction.narrative }}Walk for {{ direction.distance }} miles</h4>
+                                      {% endfor %}
+                                </div>
+                        </div>
+                        {% for altRoute in result.alternateRoutes %}
+                        <div class="card" style="background-color: rgba(255,255,255,0.38);">
+                            <div class="card-header d-flex justify-content-between" role="tab">
+                                <h5 class="d-flex mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1" style="height: 40px;font-size: 24px;color: rgb(165,208,255);">Route {{loop.index + 1}}</a></h5>
+                                <p style="font-size: 18px;margin-bottom: 0px;">Crime Rating: {{altRoute.crimeRating}}</p>
+                            </div>
+                        </div>
+                        <div id= "1" class="item-1 collapse show" role="tabpanel" data-parent="#accordion-1" style="background-color: rgba(0, 0, 0, 0.37);">
+                            <div class="card-body">
+                                {% for direction in altRoute.directions %}
+                                    {% for step in direction %}
+                                        <h4 style="font-size: 8px;">Step {{ loop.index }} {{ step.narrative }} Walk for {{ step.distance }} miles</h4>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                    </div>
+                        {% endfor %}
+                        <p id = "blahblah"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    
+    <div class="footer-dark" style="padding-top: 20px;padding-bottom: 1px;">
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 col-md-3 item">
+                        <h3>About</h3>
+                        <ul>
+                            <li><a href="#">Company</a></li>
+                            <li><a href="#">Team</a></li>
+                            <li><a href="#">Careers</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6 item text">
+                        <h3>Buddy</h3>
+                        <p>Buddy Description</p>
+                    </div>
+                </div>
+                <p class="copyright">Buddy © 2019</p>
+            </div>
+        </footer>
+    </div>
+    <script>
+        var directionsArray = [];
+        var result = JSON.parse('{{result| tojson}}');
+        function parseResults(){
+            var index = 1;
+            var tempSteps = ""
+            var tempCrimeRating = ""
+            for (direction of result.directions ){
+                tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "\n";
+                index++;
+            }
+            tempCrimeRating = result.crimeRating;
+            directionsArray.push({
+                steps: tempSteps,
+                crimeRating: tempCrimeRating
+            });
+
+            for (route of result.alternateRoutes){
+                index = 1;
+                tempSteps = "";
+                tempCrimeRating = ""
+                for (direction of route.directions ){
+                  for (step of direction){
+                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "\n";
+                    index++;
+                  }
+                }
+                tempCrimeRating = route.crimeRating;
+                directionsArray.push({
+                    steps: tempSteps,
+                    crimeRating: tempCrimeRating
+                });
+            }
+            console.log(directionsArray);
+        }
+        function toggleAccordion() {
+        //   var card = document.getElementById(cardId);
+            //document.getElementsByClassName("item-1").classList.toggle('collapse');
+            document.getElementById("blahblah").innerHTML = "BLAH BLAH BLAH";
+          
+          
+        }
+    </script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+
+</html>
