@@ -38,6 +38,7 @@
                             <label onclick="toggleDirections(4)"class="btn btn-secondary" style="background-color: rgba(198,12,0,0.53);">4<input type="radio" name="options" checked=""></label></div>
                         <p id="route-number"style="font-size: 18px;margin-bottom: 0px;"></p>
                         <p id="route-crime-rating"style="font-size: 18px;margin-bottom: 0px;"></p>
+                        <p id="route-real-time" style="font-size: 18px;margin-bottom: 0px;"></p>
                         <h4 id="route-paragraph"style="font-size: 14px;"></h4>
                     </div>
                 </div>
@@ -100,17 +101,27 @@
                     realTime: route.realTime
                 });
             }
-            console.log(directionsArray);
+            sortByCrime();
+            toggleDirections(1);
         }
         function toggleDirections(button) {
             var currentDirection = directionsArray[button - 1];
             var routeNumber = document.getElementById("route-number");
             var routeCrimeRating = document.getElementById("route-crime-rating");
+            var routeRealTime = document.getElementById("route-real-time")
             var paragraph = document.getElementById("route-paragraph");
             routeNumber.innerHTML = "Route " + button;
             routeCrimeRating.innerHTML = "Crime Rating: "+ currentDirection.crimeRating;
+            routeRealTime.innerHTML = "Estimated time: " + currentDirection.realTime + " minutes";
             paragraph.innerHTML = currentDirection.steps;
-        }
+          }
+
+          function sortByCrime(){
+            directionsArray.sort(function(a, b){return a.crimeRating-b.crimeRating});
+          }
+          function sortByTime(){
+            directionsArray.sort(function(a, b){return a.realTime-b.realTime});
+          }
     </script>
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
