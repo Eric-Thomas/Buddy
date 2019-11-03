@@ -16,7 +16,7 @@
                 id="navcol-1" style="background-color: #ffffff;"></div>
         </div>
     </nav>
-    <header class="d-xl-flex flex-grow-1 flex-fill align-items-xl-end masthead text-white text-center" style="background: url('bg-masthead.jpg')no-repeat center center;padding-top: 100px;padding-bottom: 400px;background-image: url(&quot;none&quot;);">
+    <header class="d-xl-flex flex-grow-1 flex-fill align-items-xl-end masthead text-white text-center" style="background: url('bg-masthead.jpg')no-repeat center center;padding-top: 100px;">
         <div class="container flex-grow-1" style="background-color: rgba(111,111,111,0.15);">
             <div class="row">
                 <div class="col-xl-9 mx-auto">
@@ -45,7 +45,7 @@
         </div>
     </header>
 
-    <div class="footer-dark" style="padding-top: 500px;padding-bottom: 1px;">
+    <div class="footer-dark" style="padding-top: 30px;padding-bottom: 1px;">
         <footer>
             <div class="container">
                 <div class="row">
@@ -65,8 +65,8 @@
             var index = 1;
             var tempSteps = ""
             var tempCrimeRating = ""
-            for (direction of result.directions){
-                tempSteps += "Step " + index + " " + direction.narrative + " (" + direction.distance + ")<br>";
+            for (direction of result.directions ){
+                tempSteps += "Step " + index + " " + direction.narrative + " walk for " + direction.distance + "<br>";
                 index++;
             }
             tempCrimeRating = result.crimeRating;
@@ -83,7 +83,7 @@
                 tempCrimeRating = ""
                 for (direction of route.directions ){
                   for (step of direction){
-                    tempSteps += "Step " + index + " " + step.narrative + " (" + step.distance + ")<br>";
+                    tempSteps += "Step " + index + " " + step.narrative + " walk for " + step.distance + "<br>";
                     index++;
                   }
                 }
